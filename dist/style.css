@@ -45,3 +45,5 @@ blockquote{margin:14px 0;background:#f2f5f9;border-left:3px solid #a5b8cd;paddin
 @media(max-width:440px){main{padding:0 12px}.card{padding:18px}.review-metrics{grid-template-columns:1fr}.session-timeline li{grid-template-columns:95px 1fr}.code{font-size:1.4rem}.navigation-actions{display:grid;grid-template-columns:1fr 1fr}.navigation-actions #skip{grid-column:1/-1;grid-row:2}.navigation-actions #next{margin:0}.tabs button{padding:10px 12px}.comfort button{flex:1}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 @media print{header,footer,.tabs,.session-card,.actions,.observation-save,.steps,button{display:none!important}main{max-width:none;margin:0;padding:0}.card{padding:14px;box-shadow:none}.scroll{overflow:visible}table{font-size:10pt}.metrics{grid-template-columns:repeat(3,1fr)}}
+
+#import-status{white-space:pre-line}input[type=file]{max-width:100%;padding:.8rem;border:1px solid #687785;border-radius:.5rem}

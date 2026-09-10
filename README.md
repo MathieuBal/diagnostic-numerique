@@ -7,14 +7,14 @@ Plateforme de diagnostic pour préparer 12 ateliers de médiation numérique. In
 - Parcours de 90 minutes : habitudes, 12 questions, 6 manipulations, pause, 3 situations et bilan.
 - Démonstration participant et tableau de bord avec données explicitement fictives, utilisables sans Supabase.
 - Collecte centrale préparée avec Supabase : accès animateur par e-mail et mot de passe, code de séance, sauvegarde automatique, résultats et export CSV.
-- **La collecte réelle est désactivée tant que `dist/config.js` n’est pas renseigné et que le schéma SQL n’est pas installé.**
+- **Les vraies séances sont utilisables sans Supabase avec récupération de fichiers. La transmission automatique reste désactivée tant que `dist/config.js` et Supabase ne sont pas configurés.**
 - L’envoi de réponses par e-mail n’est pas implémenté. C’est une alternative à choisir ou un complément futur. Le CSV se télécharge depuis l’espace animateur.
 
 ## Consulter le site
 
 Après activation de GitHub Pages et déploiement : https://mathieubal.github.io/diagnostic-numerique/
 
-Cette adresse est l’adresse prévue, pas une confirmation de publication. Dans le dépôt, ouvrir **Settings > Pages**, puis sélectionner **GitHub Actions** comme source. Le workflow `Publier le site` publie uniquement `dist/`, après les vérifications. Au besoin, lancer ce workflow manuellement dans **Actions**.
+Le site est publié à cette adresse. Dans le dépôt, ouvrir **Settings > Pages**, puis sélectionner **GitHub Actions** comme source. Le workflow `Publier le site` publie uniquement `dist/`, après les vérifications. Au besoin, lancer ce workflow manuellement dans **Actions**.
 
 ## Connexion de la collecte centrale — à faire plus tard
 
@@ -84,3 +84,21 @@ L’interface utilise des modules JavaScript standards. `dist/api.js` isole la c
 - Préparation de séance intégrée avec déroulé de 90 minutes et fichiers à installer sur les postes.
 
 Les nouveaux champs restent dans les objets JSON déjà prévus : aucune migration du schéma n’est nécessaire pour cette évolution. La connexion Supabase et le test de collecte réelle restent à effectuer.
+
+
+## Utiliser la plateforme dès maintenant, sans Supabase
+
+1. Sur le poste formateur, ouvrir `admin.html`, puis **Ouvrir mes séances sur cet ordinateur**.
+2. Créer une séance. Copier son lien participant sur tous les postes (le code y est prérempli).
+3. Chaque personne saisit un prénom ou pseudonyme distinct et commence son vrai diagnostic. Les réponses sont conservées dans son navigateur ; elles ne sont pas transmises.
+4. Dans **Préparer la séance**, imprimer une grille d’observation par personne. Noter les gestes et réponses orales au fil de l’atelier.
+5. Réserver les cinq dernières minutes du bilan à la récupération : chacun termine puis clique sur **Télécharger mon résultat**. Récupérer les fichiers JSON de Téléchargements sur une clé USB ou dans un dossier partagé.
+6. Sur le poste formateur, sélectionner tous les fichiers de la séance et cliquer sur **Importer les fichiers sélectionnés**. Vérifier le nombre et les prénoms. Un code de séance différent est refusé ; deux personnes de même prénom ne sont pas fusionnées.
+7. Reporter les observations dans chaque dossier, puis exporter le CSV et **Sauvegarder toute la séance**. Le JSON contient les réponses et observations et se réimporte sur un autre poste ; le CSV sert à l’analyse.
+8. Après confirmation de récupération, effacer les copies locales sur les postes partagés. La suppression d’une séance dans l’espace formateur nécessite confirmation.
+
+Le code est un repère de regroupement, pas un mot de passe. La récupération par fichiers est manuelle et ne nécessite pas de serveur. Ne pas déposer les réponses dans le dépôt GitHub public. Le site a besoin d’Internet pour charger et pour la recherche web ; ce mode ne promet pas un fonctionnement entièrement hors ligne.
+
+Les sauvegardes de séance utilisent le format versionné `diagnostic-seance` et les résultats individuels `diagnostic-participant`. Les fichiers de démonstration sont refusés à l’import. Les réimports utilisent un identifiant de participant et un numéro de révision : les anciennes réponses ne remplacent pas les plus récentes et les observations présentes sont conservées. Maximum : 250 participants par séance et 20 Mo par fichier importé. La capacité du stockage du navigateur peut être inférieure : en cas d’alerte, exporter immédiatement la sauvegarde avant de fermer la page.
+
+Validation supplémentaire : aller-retour résultat → import → observations → sauvegarde → restauration → CSV, doublons, révisions anciennes, prénoms identiques et rejets des fichiers invalides. La vérification dans un vrai navigateur et sur les postes de l’atelier reste à faire. Avant la séance, faire un essai avec un pseudonyme de test sur deux postes et vérifier la récupération du fichier.

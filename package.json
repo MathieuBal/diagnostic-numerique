@@ -2,6 +2,6 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check dist/app.js && node --check dist/api.js && node --check dist/admin.js && node --check dist/reporting.js && node --check dist/comfort.js && node --check dist/core.js"
+    "check": "node --check dist/app.js && node --check dist/api.js && node --check dist/admin.js && node --check dist/reporting.js && node --check dist/comfort.js && node --check dist/core.js && node --check dist/transfer.js && node --check dist/observation.js"
   }
 }
