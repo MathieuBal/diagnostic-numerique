@@ -29,3 +29,10 @@ export function mergeParticipants(existing,incoming){
  }
  return {participants:result,added,updated,ignored};
 }
+
+export const FREE_SESSION_CODE='SANS-CODE';
+export function assignToSession(parsed,code){
+ const target=sessionCode(code);
+ if(parsed.code!==target&&(parsed.title||parsed.code!==FREE_SESSION_CODE))throw Error('Ce fichier appartient à une autre séance.');
+ return parsed.participants.map(p=>({...p,code:target}));
+}

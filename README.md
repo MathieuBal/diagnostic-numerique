@@ -89,11 +89,11 @@ Les nouveaux champs restent dans les objets JSON déjà prévus : aucune migrati
 ## Utiliser la plateforme dès maintenant, sans Supabase
 
 1. Sur le poste formateur, ouvrir `admin.html`, puis **Ouvrir mes séances sur cet ordinateur**.
-2. Créer une séance. Copier son lien participant sur tous les postes (le code y est prérempli).
+2. Créer une séance. Ouvrir le lien habituel du site sur tous les postes : aucun code à saisir en mode par fichiers.
 3. Chaque personne saisit un prénom ou pseudonyme distinct et commence son vrai diagnostic. Les réponses sont conservées dans son navigateur ; elles ne sont pas transmises.
 4. Dans **Préparer la séance**, imprimer une grille d’observation par personne. Noter les gestes et réponses orales au fil de l’atelier.
 5. Réserver les cinq dernières minutes du bilan à la récupération : chacun termine puis clique sur **Télécharger mon résultat**. Récupérer les fichiers JSON de Téléchargements sur une clé USB ou dans un dossier partagé.
-6. Sur le poste formateur, sélectionner tous les fichiers de la séance et cliquer sur **Importer les fichiers sélectionnés**. Vérifier le nombre et les prénoms. Un code de séance différent est refusé ; deux personnes de même prénom ne sont pas fusionnées.
+6. Sur le poste formateur, sélectionner tous les fichiers de la séance et cliquer sur **Importer les fichiers sélectionnés**. Vérifier le nombre et les prénoms. Les résultats sans code sont affectés à la séance sélectionnée par l’animateur : vérifier le groupe avant import. Les anciens fichiers portant un autre code restent refusés ; deux personnes de même prénom ne sont pas fusionnées.
 7. Reporter les observations dans chaque dossier, puis exporter le CSV et **Sauvegarder toute la séance**. Le JSON contient les réponses et observations et se réimporte sur un autre poste ; le CSV sert à l’analyse.
 8. Après confirmation de récupération, effacer les copies locales sur les postes partagés. La suppression d’une séance dans l’espace formateur nécessite confirmation.
 
@@ -102,3 +102,5 @@ Le code est un repère de regroupement, pas un mot de passe. La récupération p
 Les sauvegardes de séance utilisent le format versionné `diagnostic-seance` et les résultats individuels `diagnostic-participant`. Les fichiers de démonstration sont refusés à l’import. Les réimports utilisent un identifiant de participant et un numéro de révision : les anciennes réponses ne remplacent pas les plus récentes et les observations présentes sont conservées. Maximum : 250 participants par séance et 20 Mo par fichier importé. La capacité du stockage du navigateur peut être inférieure : en cas d’alerte, exporter immédiatement la sauvegarde avant de fermer la page.
 
 Validation supplémentaire : aller-retour résultat → import → observations → sauvegarde → restauration → CSV, doublons, révisions anciennes, prénoms identiques et rejets des fichiers invalides. La vérification dans un vrai navigateur et sur les postes de l’atelier reste à faire. Avant la séance, faire un essai avec un pseudonyme de test sur deux postes et vérifier la récupération du fichier.
+
+Le lien participant est désormais commun à tous les groupes. Le prénom est le seul champ obligatoire en mode par fichiers ; la séance est choisie par l’animateur lors de l’import. Les liens d’exercice sont accessibles depuis les consignes : aucune autre adresse à distribuer.
