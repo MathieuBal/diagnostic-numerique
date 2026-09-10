@@ -7,4 +7,9 @@
 <label for="subject">Objet</label><input id="subject" type="text" autocomplete="off">
 <label for="message">Message</label><textarea id="message" rows="5"></textarea>
 <label for="file">Pièce jointe</label><input id="file" type="file"><small>Le nom du fichier sélectionné apparaît à côté du bouton.</small>
-<footer>Simulation locale : aucun message n’est envoyé et aucun fichier n’est transmis. Fermer ou recharger la page efface le message saisi.</footer></html>
+<p><button type="button" id="clear" style="font:inherit;padding:12px 18px;cursor:pointer">Effacer mon message d’exercice</button></p><p id="draft-status" role="status"></p><footer>Simulation locale : aucun message n’est envoyé et aucun fichier n’est transmis. Le texte reste disponible dans cet onglet pendant votre exercice. Après rechargement, sélectionnez de nouveau la pièce jointe. Revenez ensuite à l’onglet du parcours.</footer><script>
+const fields=['to','subject','message'];
+try {const saved=JSON.parse(sessionStorage.getItem('atelier-message')||'{}');fields.forEach(id=>document.getElementById(id).value=saved[id]||'');} catch {}
+fields.forEach(id=>document.getElementById(id).addEventListener('input',()=>{try{sessionStorage.setItem('atelier-message',JSON.stringify(Object.fromEntries(fields.map(key=>[key,document.getElementById(key).value]))));document.getElementById('draft-status').textContent='Brouillon conservé dans cet onglet. Aucun envoi.';}catch{document.getElementById('draft-status').textContent='Gardez cet onglet ouvert : le brouillon ne peut pas être conservé.';}}));
+document.getElementById('clear').onclick=()=>{if(!confirm('Effacer le message et la pièce jointe sélectionnée ?'))return;fields.forEach(id=>document.getElementById(id).value='');document.getElementById('file').value='';try{sessionStorage.removeItem('atelier-message');}catch{}document.getElementById('draft-status').textContent='Message effacé.';};
+</script></html>

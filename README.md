@@ -59,7 +59,7 @@ npm test
 npm run check
 ```
 
-Le workflow exécute ces vérifications avant publication. Tests locaux : CSV (encodage, guillemets, retours ligne, neutralisation des formules), échappement HTML, indicateurs de réponses et cohérence du contenu. La validation connectée de Supabase et la vérification visuelle dans un navigateur restent à faire.
+Le workflow exécute ces vérifications avant publication. Tests locaux : CSV (encodage, guillemets, retours ligne, neutralisation des formules), échappement HTML, indicateurs de réponses et cohérence du contenu. La validation connectée de Supabase et la vérification visuelle dans un navigateur restent à faire. Les tests couvrent aussi le récapitulatif, la synthèse par domaine et les observations incomplètes.
 
 Pour un essai local : servir `dist/` avec un serveur HTTP statique. Ouvrir directement `index.html` en `file://` ne convient pas aux modules JavaScript.
 
@@ -70,3 +70,17 @@ Pour un essai local : servir `dist/` avec un serveur HTTP statique. Ouvrir direc
 - `tests/` : vérifications sans dépendances.
 
 L’interface utilise des modules JavaScript standards. `dist/api.js` isole la collecte pour faciliter un éventuel remplacement par un service de transmission par mail.
+
+
+## Améliorations ergonomiques
+
+- Navigation directe entre les sept parties, y compris sur mobile. Les durées restent indicatives.
+- Récapitulatif des éléments sans réponse et retour direct vers chacun avant de terminer.
+- Démonstration mémorisée séparément du parcours réel, avec reprise après rechargement.
+- Taille du texte et contraste réglables, labels accessibles, messages d’enregistrement visibles.
+- Recherche et filtres participants, synthèse des neuf domaines et export dédié.
+- Observation de douze gestes distincts, évaluations des situations et protection contre la perte de notes non enregistrées.
+- Les anciennes observations globales D1–D6 restent conservées et exportées, mais ne servent pas à déduire les nouveaux gestes détaillés.
+- Préparation de séance intégrée avec déroulé de 90 minutes et fichiers à installer sur les postes.
+
+Les nouveaux champs restent dans les objets JSON déjà prévus : aucune migration du schéma n’est nécessaire pour cette évolution. La connexion Supabase et le test de collecte réelle restent à effectuer.
