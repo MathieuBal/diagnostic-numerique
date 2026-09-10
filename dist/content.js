@@ -174,7 +174,7 @@ export const content = {
     {
       "id": "D2",
       "title": "Écrire et corriger",
-      "time": 7,
+      "time": 5,
       "page": 5,
       "steps": [
         "Dans Depart.txt, ajoutez : « Bonjour ! Je participe à un atelier numérique. »",
@@ -187,7 +187,7 @@ export const content = {
     {
       "id": "D3",
       "title": "Enregistrer et retrouver",
-      "time": 10,
+      "time": 7,
       "page": 5,
       "steps": [
         "Créez un dossier Mes exercices sur le bureau.",
@@ -200,12 +200,12 @@ export const content = {
     {
       "id": "D4",
       "title": "Trouver une information",
-      "time": 7,
+      "time": 5,
       "page": 6,
       "steps": [
         "Cherchez sur Internet les horaires d’accueil de la mairie d’une commune de votre choix.",
         "Retrouvez l’information sur le site officiel de cette commune.",
-        "Notez dans le livret la commune, un horaire et l’adresse de la page."
+        "Notez ci-dessous la commune, un horaire et l’adresse de la page."
       ],
       "observe": "Observe la requête, la navigation et la source. Vérifie sur la page montrée, sans réponse horaire prédéfinie. En l’absence d’Internet, code NO pour cette tâche.",
       "success": "La personne montre une page officielle pertinente et y relève un horaire."
@@ -216,7 +216,7 @@ export const content = {
       "time": 5,
       "page": 6,
       "steps": [
-        "Dans le dossier Atelier, ouvrez entrainement.html.",
+        "Ouvrez la page d’exercice avec le bouton ci-dessous.",
         "Dans la partie Téléchargement, téléchargez Invitation.txt.",
         "Retrouvez ce fichier sur l’ordinateur, puis ouvrez-le."
       ],
@@ -226,7 +226,7 @@ export const content = {
     {
       "id": "D6",
       "title": "Préparer un e-mail",
-      "time": 8,
+      "time": 6,
       "page": 6,
       "steps": [
         "Dans la même page, descendez jusqu’à Message d’exercice.",

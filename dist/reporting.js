@@ -1,12 +1,21 @@
+import {games,gameResult} from './games.js';
 import {content,interests} from './content.js';
 import {questionResult,csv} from './core.js';
 export const stages=[
- {title:'Mes habitudes',minutes:'10 min'}, {title:'Les questions',minutes:'15 min'},
- {title:'Premiers défis',minutes:'20 min'}, {title:'Pause',minutes:'5 min'},
- {title:'Internet et e-mail',minutes:'20 min'}, {title:'Situations',minutes:'10 min'},
- {title:'Mon bilan',minutes:'10 min'}
+ {title:'Mes habitudes',minutes:'5 min',ids:['habits']},
+ {title:'Appareil, clavier et souris',minutes:'12 min',ids:['Q1','G1','D1','Q2','G2','D2']},
+ {title:'Fichiers et documents',minutes:'15 min',ids:['Q3','G3','D3','Q4','G4','D5']},
+ {title:'Chercher et vérifier',minutes:'10 min',ids:['Q5','Q6','G5','D4']},
+ {title:'Pause',minutes:'5 min',ids:['pause']},
+ {title:'Communiquer par e-mail',minutes:'10 min',ids:['Q7','G6','D6']},
+ {title:'Protéger ses comptes',minutes:'10 min',ids:['Q9','G7','G8','S1']},
+ {title:'Démarches en ligne',minutes:'8 min',ids:['Q10','G9','S2']},
+ {title:'Mobile, réseaux et IA',minutes:'10 min',ids:['Q8','G10','Q11','G11','Q12','G12','S3']},
+ {title:'Mes envies et mon bilan',minutes:'5 min',ids:['bilan']}
 ];
-export const pages=[{type:'habits',stage:0},...content.questions.map(q=>({...q,type:'question',stage:1})),...content.challenges.slice(0,3).map(q=>({...q,type:'challenge',stage:2})),{type:'pause',stage:3},...content.challenges.slice(3).map(q=>({...q,type:'challenge',stage:4})),...content.situations.map(q=>({...q,type:'situation',stage:5})),{type:'bilan',stage:6}];
+const all=[...content.questions.map(x=>({...x,type:'question'})),...content.challenges.map(x=>({...x,type:'challenge'})),...content.situations.map(x=>({...x,type:'situation'})),...games.map(x=>({...x,type:'game'}))];
+export const pages=stages.flatMap((s,stage)=>s.ids.map(id=>({...all.find(x=>x.id===id)||{type:id},stage})));
+export const LEGACY_PAGE_KEYS=['habits',...content.questions.map(q=>q.id),...content.challenges.slice(0,3).map(q=>q.id),'pause',...content.challenges.slice(3).map(q=>q.id),...content.situations.map(q=>q.id),'bilan'];
 export const gestures=[
  {id:'D1_open',challenge:'D1',label:'Ouvrir un dossier et un fichier'},
  {id:'D1_window',challenge:'D1',label:'Réduire puis réafficher une fenêtre'},
@@ -34,8 +43,8 @@ export const domains=[
  {label:'Intelligence artificielle',questions:['Q12'],challenges:[],interest:'Intelligence artificielle'}
 ];
 export function answered(a,p){return typeof a[p.id]==='string'&&a[p.id].trim()!=='';}
-export function missingItems(answers){return pages.flatMap((p,index)=>p.id&&!answered(answers,p)?[{id:p.id,index,label:p.type==='question'?p.theme:p.title}]:[]);}
-export function progressCounts(answers){return {questions:content.questions.filter(q=>answered(answers,q)).length,challenges:content.challenges.filter(q=>answered(answers,q)).length,situations:content.situations.filter(q=>answered(answers,q)).length};}
+export function missingItems(answers){return pages.flatMap((p,index)=>p.id&&(p.type==='game'?['NR','partial'].includes(gameResult(p,answers).status):!answered(answers,p))?[{id:p.id,index,label:p.type==='question'?p.theme:p.title}]:[]);}
+export function progressCounts(answers){return {questions:content.questions.filter(q=>answered(answers,q)).length,challenges:content.challenges.filter(q=>answered(answers,q)).length,situations:content.situations.filter(q=>answered(answers,q)).length,games:games.filter(g=>['done','NSP'].includes(gameResult(g,answers).status)).length};}
 export function observedStatus(participant,domain){
  const selected=gestures.filter(g=>domain.challenges.includes(g.challenge));
  if(!selected.length)return null;
@@ -46,13 +55,13 @@ export function observedStatus(participant,domain){
 }
 export function summarize(participants){return domains.map(d=>{
  const qs=content.questions.filter(q=>d.questions.includes(q.id));
- return {...d,alone:participants.filter(p=>observedStatus(p,d)==='alone').length,help:participants.filter(p=>observedStatus(p,d)==='help').length,unobserved:participants.filter(p=>observedStatus(p,d)==='unobserved').length,
+ return {...d,gamesToReview:participants.filter(p=>games.filter(g=>g.domain===d.label).some(g=>{const r=gameResult(g,p.answers);return r.status==='NSP'||r.correct<r.answered;})).length,gamesIncomplete:participants.filter(p=>games.filter(g=>g.domain===d.label).some(g=>['NR','partial'].includes(gameResult(g,p.answers).status))).length,alone:participants.filter(p=>observedStatus(p,d)==='alone').length,help:participants.filter(p=>observedStatus(p,d)==='help').length,unobserved:participants.filter(p=>observedStatus(p,d)==='unobserved').length,
  knowledge:participants.filter(p=>qs.some(q=>['NSP','E'].includes(questionResult(q,p.answers[q.id])))).length,
  incomplete:participants.filter(p=>qs.some(q=>questionResult(q,p.answers[q.id])==='NR')).length,
  requested:participants.filter(p=>p.answers.interests?.includes(d.interest)).length};});}
 export function exportParticipants(session,participants){
- const header=['seance','participant_id','prenom','termine','derniere_reception',...content.questions.flatMap(q=>[q.id+'_reponse',q.id+'_resultat']),...content.challenges.flatMap(c=>[c.id+'_declaration',c.id+'_observation_globale_ancienne',c.id+'_remarque']),...gestures.map(g=>g.id+'_observation'),...content.situations.flatMap(s=>[s.id,s.id+'_evaluation_animateur']), 'appareils','internet','aisance_ordinateur','aisance_mobile','deja_autonome','besoin_aide','sujets','autre_sujet','reussite','objectif','observation_generale','recherche_commune','recherche_horaire','recherche_source'];
- const rows=participants.map(p=>[session.code,p.id,p.name,p.finished?'oui':'non',p.updated_at,...content.questions.flatMap(q=>[p.answers[q.id]??'',questionResult(q,p.answers[q.id])]),...content.challenges.flatMap(c=>[p.answers[c.id]??'',p.observations?.[c.id]??'',p.answers[c.id+'_note']??'']),...gestures.map(g=>p.observations?.[g.id]??'NO'),...content.situations.flatMap(s=>[p.answers[s.id]??'',p.observations?.[s.id]??'NO']),(p.answers.devices||[]).join(' / '),p.answers.internet,p.answers.computer_ease,p.answers.mobile_ease,p.answers.already,p.answers.help,(p.answers.interests||[]).join(' / '),p.answers.other_interest,p.answers.success,p.answers.goal,p.observations?.note,p.answers.D4_commune,p.answers.D4_horaire,p.answers.D4_source]);
+ const header=['seance','participant_id','prenom','termine','derniere_reception',...content.questions.flatMap(q=>[q.id+'_reponse',q.id+'_resultat']),...content.challenges.flatMap(c=>[c.id+'_declaration',c.id+'_observation_globale_ancienne',c.id+'_remarque']),...gestures.map(g=>g.id+'_observation'),...content.situations.flatMap(s=>[s.id,s.id+'_evaluation_animateur']), 'appareils','internet','aisance_ordinateur','aisance_mobile','deja_autonome','besoin_aide','sujets','autre_sujet','reussite','objectif','observation_generale','recherche_commune','recherche_horaire','recherche_source',...games.flatMap(g=>[...g.items.map((_,i)=>g.id+'_'+i+'_reponse'),g.id+'_statut',g.id+'_corrects',g.id+'_renseignes',g.id+'_confiance',g.id+'_aide'])];
+ const rows=participants.map(p=>[session.code,p.id,p.name,p.finished?'oui':'non',p.updated_at,...content.questions.flatMap(q=>[p.answers[q.id]??'',questionResult(q,p.answers[q.id])]),...content.challenges.flatMap(c=>[p.answers[c.id]??'',p.observations?.[c.id]??'',p.answers[c.id+'_note']??'']),...gestures.map(g=>p.observations?.[g.id]??'NO'),...content.situations.flatMap(s=>[p.answers[s.id]??'',p.observations?.[s.id]??'NO']),(p.answers.devices||[]).join(' / '),p.answers.internet,p.answers.computer_ease,p.answers.mobile_ease,p.answers.already,p.answers.help,(p.answers.interests||[]).join(' / '),p.answers.other_interest,p.answers.success,p.answers.goal,p.observations?.note,p.answers.D4_commune,p.answers.D4_horaire,p.answers.D4_source,...games.flatMap(g=>{const r=gameResult(g,p.answers);return [...g.items.map((it,i)=>it.options[p.answers[g.id+'_'+i]]??''),r.status,r.correct,r.answered,p.answers[g.id+'_confidence'],p.answers[g.id+'_help']];})]);
  return csv([header,...rows]);
 }
-export function exportSummary(participants){return csv([['domaine','sans_aide_observe','avec_aide_observe','observation_incomplete','connaissances_a_consolider','questions_sans_reponse','demandes'],...summarize(participants).map(d=>[d.label,d.challenges.length?d.alone:'non_mesure',d.challenges.length?d.help:'non_mesure',d.challenges.length?d.unobserved:'non_mesure',d.knowledge,d.incomplete,d.requested])]);}
+export function exportSummary(participants){return csv([['domaine','sans_aide_observe','avec_aide_observe','observation_incomplete','connaissances_a_consolider','questions_sans_reponse','demandes','mini_jeux_a_reprendre','mini_jeux_incomplets'],...summarize(participants).map(d=>[d.label,d.challenges.length?d.alone:'non_mesure',d.challenges.length?d.help:'non_mesure',d.challenges.length?d.unobserved:'non_mesure',d.knowledge,d.incomplete,d.requested,d.gamesToReview,d.gamesIncomplete])]);}

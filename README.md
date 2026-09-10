@@ -104,3 +104,16 @@ Les sauvegardes de séance utilisent le format versionné `diagnostic-seance` et
 Validation supplémentaire : aller-retour résultat → import → observations → sauvegarde → restauration → CSV, doublons, révisions anciennes, prénoms identiques et rejets des fichiers invalides. La vérification dans un vrai navigateur et sur les postes de l’atelier reste à faire. Avant la séance, faire un essai avec un pseudonyme de test sur deux postes et vérifier la récupération du fichier.
 
 Le lien participant est désormais commun à tous les groupes. Le prénom est le seul champ obligatoire en mode par fichiers ; la séance est choisie par l’animateur lors de l’import. Les liens d’exercice sont accessibles depuis les consignes : aucune autre adresse à distribuer.
+
+
+## Parcours thématique enrichi (version 2)
+
+Un seul lien et le prénom uniquement en mode par fichiers. Le parcours contient désormais 12 questions, 12 mini-jeux (association, tri, ordre et choix contextualisés), 6 manipulations réelles et 3 situations ouvertes, soit 33 activités et 36 écrans avec habitudes, pause et bilan.
+
+Durées indicatives : habitudes 5 min ; appareil/clavier/souris 12 min ; fichiers/documents 15 min ; recherche 10 min ; pause 5 min ; e-mails 10 min ; sécurité 10 min ; démarches 8 min ; mobile/réseaux/IA 10 min ; bilan et récupération 5 min. Total : 90 min. Annoncer les transitions, permettre de passer et noter les observations manquantes plutôt que pousser à finir. Les durées des six manipulations sont incluses dans leurs catégories, pas ajoutées au programme.
+
+La synthèse conserve neuf domaines distincts, même lorsque mobile, réseaux et IA sont réunis dans une partie d’animation. Les mini-jeux ajoutent des réponses carte par carte, leur correction, les omissions, ainsi que la confiance et l’aide déclarées facultativement. Une réponse non fournie ne devient pas une erreur. Pas de classement ni de score global. Garder les corrections pour le débrief, car une correction immédiate pourrait influencer les activités suivantes.
+
+Les réponses des anciens parcours sont conservées et leur position locale est remappée vers l’activité correspondante. Leurs mini-jeux non effectués apparaissent comme non renseignés.
+
+Si Supabase avait déjà été installé, exécuter `supabase/upgrade-parcours-v2.sql` avant d’activer la transmission du nouveau parcours (la limite de position passe de 23 à 35). Le mode par fichiers fonctionne sans cette migration. Pour une nouvelle installation, utiliser le schéma principal à jour.

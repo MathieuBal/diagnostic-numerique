@@ -9,10 +9,10 @@ test('Relire le parcours distingue une réponse inconnue, un blanc et une situat
  assert.ok(!missing.some(q=>q.id==='Q1'));assert.ok(missing.some(q=>q.id==='Q2'));assert.ok(missing.some(q=>q.id==='S1'));
  assert.ok(!missing.some(q=>q.id==='D1'));
  for(const item of missing)assert.equal(pages[item.index].id,item.id);
- assert.deepEqual(progressCounts(answers),{questions:1,challenges:1,situations:0});
+ assert.deepEqual(progressCounts(answers),{questions:1,challenges:1,situations:0,games:0});
 });
 test('Le programme conserve les 90 minutes et les positions acceptées par le serveur',()=>{
- assert.equal(stages.reduce((sum,s)=>sum+parseInt(s.minutes),0),90);assert.equal(pages.length,24);assert.equal(pages.at(-1).type,'bilan');
+ assert.equal(stages.reduce((sum,s)=>sum+parseInt(s.minutes),0),90);assert.equal(pages.length,36);assert.equal(pages.at(-1).type,'bilan');
 });
 test('Aucune autonomie déduite des seules déclarations ou anciennes notes globales',()=>{
  const p={answers:{D1:'Réalisé seul',D2:'Réalisé seul'},observations:{D1:'3',D2:'3'}};

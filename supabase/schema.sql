@@ -85,7 +85,7 @@ returns boolean language plpgsql security definer set search_path='' as $$
 declare p public.workshop_participants;
 begin
  if p_secret is null or length(p_secret)>150 then raise exception 'Session navigateur invalide.'; end if;
- if p_answers is null or jsonb_typeof(p_answers)<>'object' or octet_length(p_answers::text)>64000 or p_position is null or p_position not between 0 and 23 or p_revision is null or p_revision<0 or p_finished is null then raise exception 'Réponses invalides.'; end if;
+ if p_answers is null or jsonb_typeof(p_answers)<>'object' or octet_length(p_answers::text)>64000 or p_position is null or p_position not between 0 and 35 or p_revision is null or p_revision<0 or p_finished is null then raise exception 'Réponses invalides.'; end if;
  select * into p from public.workshop_participants where id=p_id and secret_hash=encode(extensions.digest(p_secret,'sha256'),'hex') for update;
  if not found then raise exception 'Session navigateur invalide.'; end if;
  perform 1 from public.workshop_sessions where id=p.session_id and is_open for share;
