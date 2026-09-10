@@ -1,3 +1,4 @@
+import {normalizePlan} from './workshops.js';
 import {normalizeAnswers} from './core.js';
 import {gestures} from './reporting.js';
 export const LOCAL_TRAINER_KEY='diagnostic-formateur-local-v1';
@@ -11,13 +12,13 @@ function record(p,code,withObservations=false){
  return {id:p.id,name:p.name.trim(),code,answers:normalizeAnswers(p.answers),observations,finished:p.finished===true,revision:Number.isSafeInteger(p.revision)&&p.revision>=0?p.revision:0,updated_at:typeof p.updated_at==='string'&&!Number.isNaN(Date.parse(p.updated_at))?p.updated_at:new Date().toISOString()};
 }
 export function participantFile(state){return {format:'diagnostic-participant',version:1,code:sessionCode(state.code),participant:record({...state,updated_at:state.updatedAt},sessionCode(state.code))};}
-export function sessionFile(session,participants){return {format:'diagnostic-seance',version:1,session:{id:session.id,title:session.title,code:session.code,is_open:true},participants};}
+export function sessionFile(session,participants){return {format:'diagnostic-seance',version:1,session:{id:session.id,title:session.title,code:session.code,is_open:true,plan:normalizePlan(session.plan)},participants};}
 export function parseTransfer(text){
  if(text.length>20000000)throw Error('Fichier trop volumineux (20 Mo maximum).');
  let data;try{data=JSON.parse(text);}catch{throw Error('Ce fichier n’est pas un résultat JSON valide.');}
  if(data?.version!==1)throw Error('Version de fichier non reconnue.');
  if(data.format==='diagnostic-participant'){const code=sessionCode(data.code);return {code,participants:[record(data.participant,code)]};}
- if(data.format==='diagnostic-seance'&&Array.isArray(data.participants)&&data.participants.length<=250){const code=sessionCode(data.session?.code);return {code,title:String(data.session?.title||code).slice(0,100),participants:data.participants.map(p=>record(p,code,true))};}
+ if(data.format==='diagnostic-seance'&&Array.isArray(data.participants)&&data.participants.length<=250){const code=sessionCode(data.session?.code);return {code,title:String(data.session?.title||code).slice(0,100),plan:normalizePlan(data.session?.plan),participants:data.participants.map(p=>record(p,code,true))};}
  throw Error('Choisissez un fichier de résultat ou une sauvegarde de séance de cette plateforme.');
 }
 export function mergeParticipants(existing,incoming){

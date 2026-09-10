@@ -117,3 +117,24 @@ La synthèse conserve neuf domaines distincts, même lorsque mobile, réseaux et
 Les réponses des anciens parcours sont conservées et leur position locale est remappée vers l’activité correspondante. Leurs mini-jeux non effectués apparaissent comme non renseignés.
 
 Si Supabase avait déjà été installé, exécuter `supabase/upgrade-parcours-v2.sql` avant d’activer la transmission du nouveau parcours (la limite de position passe de 23 à 35). Le mode par fichiers fonctionne sans cette migration. Pour une nouvelle installation, utiliser le schéma principal à jour.
+
+
+## Analyse graphique et programme d’ateliers (version 3)
+
+Dans l’espace animateur, **Graphiques** affiche l’avancement, les réponses aux questions et aux cartes par domaine, l’autonomie observée, les envies, la confiance croisée avec les réponses, et une matrice participants × domaines. Cliquer un segment ou sa légende permet de retrouver les personnes ; cliquer une case détaille les éléments puis ouvre leur dossier. Les dénominateurs sont explicités : les barres de connaissances comptent des réponses (absences comprises), celles d’autonomie comptent des personnes. La confiance ne croise que des mini-jeux complètement renseignés avec une confiance déclarée. Les évaluations humaines de S1/S2/S3 interviennent dans les domaines correspondants de la matrice et des propositions.
+
+**Mes 12 ateliers** propose deux prérequis, puis les autres domaines classés par nombre de personnes avec besoin repéré et ensuite par demandes. Deux consolidations et un bilan complètent le programme ; une demande de documents/tableaux remplace une consolidation par ce thème non évalué en détail. Le programme explique les données disponibles et les lacunes. Titres, objectifs, activités, variantes, vérifications, participants et notes sont modifiables ; l’ordre aussi. Enregistrer fige cette version. Recalculer est explicite et demande confirmation avant de remplacer les adaptations. Le CSV exporte le programme courant ; la sauvegarde JSON de séance inclut la version enregistrée. Les anciennes sauvegardes restent importables.
+
+Les graphiques et propositions fonctionnent immédiatement avec les fichiers importés et la démonstration. La collecte automatique n’est pas activée tant que le projet Supabase reste non configuré. Les programmes en mode local sont enregistrés dans le navigateur et inclus dans la sauvegarde de séance ; en mode connecté, ils sont réservés au propriétaire de la séance.
+
+### Activer le lien unique connecté
+
+- Nouvelle installation : installer le `supabase/schema.sql` actuel (il inclut les fonctions d’analyse et d’accueil unique).
+- Installation ancienne : appliquer `supabase/upgrade-parcours-v2.sql` si nécessaire, puis `supabase/upgrade-analyse-v3.sql`.
+- Créer le compte animateur et l’autoriser comme indiqué au début de ce document, puis renseigner seulement l’URL publique et la clé publishable/anon dans `dist/config.js`.
+- Dans l’espace animateur connecté : créer ou sélectionner une séance et cliquer **Accueillir sur le lien unique**. Cette action ouvre la séance et y rattache les nouvelles arrivées sur le lien habituel. Les anciens participants restent dans leur séance ; changer la séance d’accueil ne déplace pas leurs réponses.
+- Les participants saisissent seulement leur prénom. Sans séance d’accueil ouverte, le site leur demande de prévenir l’animateur. Une inscription réessayée avec le même identifiant et secret conserve sa séance d’origine, même si l’accueil a changé entretemps.
+- Une seule séance d’accueil pour ce projet dédié. Un autre animateur ne peut pas prendre la main sur une entrée appartenant à un collègue. Aucun accès public aux réponses, observations ou programmes ; seules les fonctions d’inscription et de sauvegarde participant sont accessibles sans compte.
+- Avant utilisation réelle : depuis deux navigateurs, créer une séance, l’activer, remplir quelques réponses, confirmer leur réception, enregistrer une observation et un programme, se reconnecter et vérifier leur présence. Tester ensuite la fermeture de la collecte et le refus d’accès avec un compte non autorisé. Cette validation connectée reste à effectuer : aucun projet Supabase n’était accessible pendant le développement.
+
+Vérifications automatiques : calculs avec réponses partielles, dénominateurs, sélection des personnes par segment, confiance, observations de situations, conditions des acquis, programme sans données, programme de 12 ateliers et aller-retour des adaptations par sauvegarde. Vérification visuelle dans un navigateur non réalisée.
