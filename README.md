@@ -138,3 +138,14 @@ Les graphiques et propositions fonctionnent immédiatement avec les fichiers imp
 - Avant utilisation réelle : depuis deux navigateurs, créer une séance, l’activer, remplir quelques réponses, confirmer leur réception, enregistrer une observation et un programme, se reconnecter et vérifier leur présence. Tester ensuite la fermeture de la collecte et le refus d’accès avec un compte non autorisé. Cette validation connectée reste à effectuer : aucun projet Supabase n’était accessible pendant le développement.
 
 Vérifications automatiques : calculs avec réponses partielles, dénominateurs, sélection des personnes par segment, confiance, observations de situations, conditions des acquis, programme sans données, programme de 12 ateliers et aller-retour des adaptations par sauvegarde. Vérification visuelle dans un navigateur non réalisée.
+
+
+## Supprimer une ancienne séance (version 4)
+
+Pour une base existante, exécuter une fois `supabase/upgrade-suppression-v4.sql`. Ce script installe la fonction ; il ne supprime aucune donnée. Le schéma complet inclut cette fonction pour les nouvelles installations.
+
+Dans l’espace animateur connecté : sélectionner la séance, fermer sa collecte, puis ouvrir **Supprimer cette séance**. Un bouton permet de sauvegarder son JSON avant suppression. Le bouton de suppression demande de recopier le nom exact ; la référence de séance est aussi affichée dans la confirmation. La vérification du compte animateur, de la propriété, de la fermeture et du nom est effectuée côté base. Le bouton n’agit pas dans la démonstration.
+
+La suppression efface définitivement la séance, son programme, ses participants et leurs observations. Si elle était désignée comme accueil, cette désignation disparaît ; aucune autre séance n’est activée automatiquement. Les fichiers exportés et les copies conservées dans les navigateurs participants ne sont pas effacés à distance. Le mode local conserve son action distincte **Effacer cette séance de ce navigateur**.
+
+La validation de la suppression en base doit être faite après installation, sur une séance de test appartenant au formateur. Aucun effacement réel n’a été effectué pendant le développement.
